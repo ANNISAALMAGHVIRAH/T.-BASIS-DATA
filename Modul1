@@ -1,0 +1,111 @@
+PEMBUATAN BASIS DATA:
+create database TI;
+use TI;
+
+MENGHAPUS BASIS DATA:
+drop database TI;
+
+PEMBUATAN TABEL DALAM BASIS DATA:
+use TI;
+>create table mahasiswa (
+nim varchar(20) primary key,
+nama varchar(10),
+kelas varchar(20)
+);
+
+show tables;
+
+MENGHAPUS TABLE:
+drop table mahasiswa;
+
+MENGUPDATE ATRIBUT TABLE:
+alter table mahasiswa add nim int;
+
+MENGISI TABLE:
+insert into mahasiswa (nama,kelas) values ('acaa', 'A');
+
+MENGUPDATE ISISAN TABLE:
+select * from mahasiswa;
+
+update mahasiswa
+set nama = 'riwei'
+where kelas = 'A';
+
+select * from mahasiswa;
+
+
+
+#STUDI KASUS
+create database perkuliahan;
+show databases;
+use perkuliahan;
+
+create table mahasiswa (
+    nim varchar(20) primary key,
+    nama varchar(100),
+    kelas varchar(50),
+    alamat varchar(255)
+);
+
+create table nilai (
+    id_nilai int auto_increment primary key,
+    nim varchar(20),
+    kode_mk varchar(20),
+    nilai_angka float,
+    nilai_huruf varchar(2),
+    foreign key (nim) references mahasiswa(nim),
+    foreign key (kode_mk) references mata_kuliah(kode_mk)
+);
+
+create table dosen (
+    nidn varchar(20) primary key,
+    nama varchar(100),
+    jabatan varchar(50),
+    email varchar(100)
+);
+
+create table mata_kuliah (
+    kode_mk varchar(20) primary key,
+    nama_mk varchar(100),
+    sks int,
+    semester int,
+    nidn_dosen varchar(20),
+    foreign key (nidn_dosen) references dosen(nidn)
+);
+
+insert into mahasiswa (nim, nama, kelas, alamat) values ('19001', 'aca', 'A', 'korea'), 
+('19002', 'ica', 'A', 'jepang');
+
+insert into dosen (nidn, nama, jabatan, email) values ('D001', 'ashril', 'profesor', 'ashril@uin.ac.id'), 
+('D002', 'arief', 'profesor', 'arief@uin.ac.id');
+
+insert into mata_kuliah (kode_mk, nama_mk, sks, semester, nidn_dosen) values ('MK001', 'basis data', 4, 3, 'D001'),
+('MK002', 'algoritma', 3, 3, 'D002');
+
+insert into nilai (nim, kode_mk, nilai_angka, nilai_huruf) values ('19001', 'MK001', 85, 'A'),
+('19001', 'MK002', 78, 'B');
+
+
+select 
+    m.nim,
+    m.nama as nama_mahasiswa,
+    m.kelas,
+    mk.kode_mk,
+    mk.nama_mk,
+    mk.sks,
+    mk.semester,
+    n.nilai_angka,
+    n.nilai_huruf,
+    d.nama as nama_dosen
+from nilai n
+join mahasiswa m on n.nim = m.nim
+join mata_kuliah mk on n.kode_mk = mk.kode_mk
+join dosen d on mk.nidn_dosen = d.nidn
+order by m.nim, mk.semester;
+
+select * from mahasiswa;
+select * from dosen;
+select * from mata_kuliah;
+select * from nilai;
+
+
