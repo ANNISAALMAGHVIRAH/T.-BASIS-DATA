@@ -1,0 +1,129 @@
+mysql> create database siakad;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| praktikum_web      |
+| siakad             |
+| sys                |
++--------------------+
+6 rows in set (0.00 sec)
+
+mysql> use siakad;
+Database changed
+
+
+mysql> create table dosen (
+    -> id_dosen int auto_increment primary key,
+    -> nama_dosen varchar(100),
+    -> nip varchar(30),
+    -> email varchar(100)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+
+mysql> create table mata_kuliah (
+    -> kode_mata_kuliah varchar(10) primary key,
+    -> nama_matakuliah varchar(100),
+    -> sks int,
+    -> semester int
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+
+mysql> create table distribusi_mata_kuliah (
+    -> id_distribusi int auto_increment primary key,
+    -> id_dosen int,
+    -> kode_mata_kuliah varchar(10),
+    -> tahun_ajar varchar(10),
+    -> kelas varchar(5),
+    -> foreign key (id_dosen) references dosen(id_dosen),
+    -> foreign key (kode_mata_kuliah) references mata_kuliah(kode_mata_kuliah)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+
+mysql> INSERT INTO dosen (nama_dosen, nip, email) VALUES
+    -> ('Dr. Andi Prasetyo', '197801012001011001', 'andi.prasetyo@univ.ac.id'),
+    -> ('Dr. Rina Kurniawati', '198003152002012002', 'rina.kurniawati@univ.ac.id'),
+    -> ('Drs. Bambang Hidayat', '197505202000111003', 'bambang.hidayat@univ.ac.id'),
+    -> ('Mira Puspita, M.Kom', '198601102010121004', 'mira.puspita@univ.ac.id'),
+    -> ('Dedi Saputra, M.T', '198313202008101005', 'dedi.saputra@univ.ac.id'),
+    -> ('Lestari Anggraini, M.Si', '198702172010112006', 'lestari.anggraini@univ.ac.id'),
+    -> ('Fajar Nugroho, M.Kom', '198909222021111007', 'fajar.nugroho@univ.ac.id'),
+    -> ('Ratna Dewi, M.Kom', '199008012019101008', 'ratna.dewi@univ.ac.id'),
+    -> ('Taufik Rahman, M.T', '198105142009101009', 'taufik.rahman@univ.ac.id');
+Query OK, 9 rows affected (0.03 sec)
+Records: 9  Duplicates: 0  Warnings: 0
+
+
+INSERT INTO mata_kuliah (kode_mata_kuliah, nama_matakuliah, sks, semester) VALUES
+('IF101', 'Algoritma dan Pemrograman', 3, 1),
+('IF102', 'Matematika Diskrit', 3, 1),
+('IF201', 'Struktur Data', 3, 2),
+('IF202', 'Basis Data', 3, 2),
+('IF301', 'Pemrograman Berorientasi Objek', 3, 3),
+('IF302', 'Jaringan Komputer', 3, 3),
+('IF303', 'Sistem Operasi', 3, 3),
+('IF401', 'Pemrograman Web', 3, 4),
+('IF402', 'Kecerdasan Buatan', 3, 5),
+('IF403', 'Rekayasa Perangkat Lunak', 3, 5);
+
+
+INSERT INTO distribusi_mata_kuliah (id_dosen, kode_mata_kuliah, tahun_ajar, kelas) VALUES
+(1, 'IF101', '2024/2025', 'A'),
+(2, 'IF202', '2024/2025', 'B'),
+(4, 'IF401', '2024/2025', 'A'),
+(5, 'IF303', '2024/2025', 'C');
+
+
+SELECT
+    d.id_dosen,
+    d.nama_dosen,
+    d.nip,
+    mk.kode_mata_kuliah,
+    mk.nama_matakuliah,
+    dm.tahun_ajar,
+    dm.kelas
+FROM
+    dosen d
+INNER JOIN
+    distribusi_mata_kuliah dm ON d.id_dosen = dm.id_dosen
+INNER JOIN
+    mata_kuliah mk ON dm.kode_mata_kuliah = mk.kode_mata_kuliah;
+
+
+SELECT
+    d.id_dosen,
+    d.nama_dosen,
+    d.nip,
+    mk.kode_mata_kuliah,
+    mk.nama_matakuliah,
+    dm.tahun_ajar,
+    dm.kelas
+FROM
+    dosen d
+LEFT JOIN
+    distribusi_mata_kuliah dm ON d.id_dosen = dm.id_dosen
+LEFT JOIN
+    mata_kuliah mk ON dm.kode_mata_kuliah = mk.kode_mata_kuliah;
+
+
+SELECT
+    d.id_dosen,
+    d.nama_dosen,
+    mk.kode_mata_kuliah,
+    mk.nama_matakuliah,
+    dm.tahun_ajar,
+    dm.kelas
+FROM
+    dosen d
+RIGHT JOIN
+    distribusi_mata_kuliah dm ON d.id_dosen = dm.id_dosen
+RIGHT JOIN
+    mata_kuliah mk ON dm.kode_mata_kuliah = mk.kode_mata_kuliah;
